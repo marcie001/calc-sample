@@ -3,17 +3,18 @@ package sample;
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Calc {
+/**
+ * 逆ポーランド記法電卓
+ *
+ * @author marcie
+ */
+public class RpnCalc implements Calculator {
 
-	public static void main(String... args) {
-		System.out.printf("%s = %s", Stream.of(args).collect(Collectors.joining(" ")), calc(args).toPlainString());
-	}
-
-	public static BigDecimal calc(String... args) {
-		Deque<BigDecimal> result = Stream.of(args)
+	@Override
+	public BigDecimal execute(String... expression) {
+		Deque<BigDecimal> result = Stream.of(expression)
 				.collect(
 						() -> new ArrayDeque<BigDecimal>(),
 						(acc, elm) -> {
@@ -33,12 +34,12 @@ public class Calc {
 								case "*":
 									b = acc.pop();
 									a = acc.pop();
-									acc.push(a.multiply(b));
+									acc.push(a.multiply(b, Constants.MATH_CONTEXT));
 									break;
 								case "/":
 									b = acc.pop();
 									a = acc.pop();
-									acc.push(a.divide(b));
+									acc.push(a.divide(b, Constants.MATH_CONTEXT));
 									break;
 								default:
 									acc.push(new BigDecimal(elm));
